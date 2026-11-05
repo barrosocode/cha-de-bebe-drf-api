@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from drf_spectacular.utils import extend_schema
 
 from users.serializers import (
+    ChangePasswordSerializer,
     LoginResponseSerializer,
     LoginSerializer,
     LogoutResponseSerializer,
@@ -51,3 +52,14 @@ def logout_view(request):
 def me_view(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
+
+
+# change password
+@extend_schema(request=ChangePasswordSerializer, responses={200: LogoutResponseSerializer})
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password_view(request):
+    serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response({'message': 'Senha alterada com sucesso'})
