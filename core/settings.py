@@ -29,7 +29,11 @@ SECRET_KEY = 'django-insecure-9e6de3^frw$n*gli^2*0ol(w0ts^-ava-%%$_nuyr)@5)y_=(!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'cha-de-bebe-drf-api.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
