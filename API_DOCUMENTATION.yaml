@@ -1,0 +1,1722 @@
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.0
+paths:
+    /api/auth/login/:
+        post:
+            operationId: auth_login_create
+            tags:
+                - auth
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Login"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Login"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Login"
+                required: true
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/LoginResponse"
+                    description: ""
+    /api/auth/logout/:
+        post:
+            operationId: auth_logout_create
+            tags:
+                - auth
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/LogoutResponse"
+                    description: ""
+    /api/auth/me/:
+        get:
+            operationId: auth_me_retrieve
+            tags:
+                - auth
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                    description: ""
+    /api/files/:
+        get:
+            operationId: files_list
+            description: CRUD de Files (se precisar gerenciar arquivos independentemente).
+            tags:
+                - files
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/File"
+                    description: ""
+        post:
+            operationId: files_create
+            description: CRUD de Files (se precisar gerenciar arquivos independentemente).
+            tags:
+                - files
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/File"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/File"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/File"
+            security:
+                - tokenAuth: []
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/File"
+                    description: ""
+    /api/files/{uuid}/:
+        get:
+            operationId: files_retrieve
+            description: CRUD de Files (se precisar gerenciar arquivos independentemente).
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this file.
+                  required: true
+            tags:
+                - files
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/File"
+                    description: ""
+        put:
+            operationId: files_update
+            description: CRUD de Files (se precisar gerenciar arquivos independentemente).
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this file.
+                  required: true
+            tags:
+                - files
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/File"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/File"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/File"
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/File"
+                    description: ""
+        patch:
+            operationId: files_partial_update
+            description: CRUD de Files (se precisar gerenciar arquivos independentemente).
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this file.
+                  required: true
+            tags:
+                - files
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PatchedFile"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/PatchedFile"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/PatchedFile"
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/File"
+                    description: ""
+        delete:
+            operationId: files_destroy
+            description: CRUD de Files (se precisar gerenciar arquivos independentemente).
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this file.
+                  required: true
+            tags:
+                - files
+            security:
+                - tokenAuth: []
+            responses:
+                "204":
+                    description: No response body
+    /api/gifts/:
+        get:
+            operationId: gifts_list
+            description: |-
+                CRUD completo de Gifts.
+
+                Leitura (listar e detalhar) é pública.
+                Criar, editar e apagar exigem login.
+
+                Endpoints gerados automaticamente:
+                - GET /api/gifts/ → lista todos
+                - POST /api/gifts/ → cria um novo
+                - GET /api/gifts/{uuid}/ → detalhes de um
+                - PUT /api/gifts/{uuid}/ → atualiza completo
+                - PATCH /api/gifts/{uuid}/ → atualiza parcial
+                - DELETE /api/gifts/{uuid}/ → deleta
+                - POST /api/gifts/{uuid}/purchase/ → convidado escolhe o presente sem login
+            tags:
+                - gifts
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Gift"
+                    description: ""
+        post:
+            operationId: gifts_create
+            description: |-
+                CRUD completo de Gifts.
+
+                Leitura (listar e detalhar) é pública.
+                Criar, editar e apagar exigem login.
+
+                Endpoints gerados automaticamente:
+                - GET /api/gifts/ → lista todos
+                - POST /api/gifts/ → cria um novo
+                - GET /api/gifts/{uuid}/ → detalhes de um
+                - PUT /api/gifts/{uuid}/ → atualiza completo
+                - PATCH /api/gifts/{uuid}/ → atualiza parcial
+                - DELETE /api/gifts/{uuid}/ → deleta
+                - POST /api/gifts/{uuid}/purchase/ → convidado escolhe o presente sem login
+            tags:
+                - gifts
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Gift"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Gift"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Gift"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Gift"
+                    description: ""
+    /api/gifts/{uuid}/:
+        get:
+            operationId: gifts_retrieve
+            description: |-
+                CRUD completo de Gifts.
+
+                Leitura (listar e detalhar) é pública.
+                Criar, editar e apagar exigem login.
+
+                Endpoints gerados automaticamente:
+                - GET /api/gifts/ → lista todos
+                - POST /api/gifts/ → cria um novo
+                - GET /api/gifts/{uuid}/ → detalhes de um
+                - PUT /api/gifts/{uuid}/ → atualiza completo
+                - PATCH /api/gifts/{uuid}/ → atualiza parcial
+                - DELETE /api/gifts/{uuid}/ → deleta
+                - POST /api/gifts/{uuid}/purchase/ → convidado escolhe o presente sem login
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this gift.
+                  required: true
+            tags:
+                - gifts
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Gift"
+                    description: ""
+        put:
+            operationId: gifts_update
+            description: |-
+                CRUD completo de Gifts.
+
+                Leitura (listar e detalhar) é pública.
+                Criar, editar e apagar exigem login.
+
+                Endpoints gerados automaticamente:
+                - GET /api/gifts/ → lista todos
+                - POST /api/gifts/ → cria um novo
+                - GET /api/gifts/{uuid}/ → detalhes de um
+                - PUT /api/gifts/{uuid}/ → atualiza completo
+                - PATCH /api/gifts/{uuid}/ → atualiza parcial
+                - DELETE /api/gifts/{uuid}/ → deleta
+                - POST /api/gifts/{uuid}/purchase/ → convidado escolhe o presente sem login
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this gift.
+                  required: true
+            tags:
+                - gifts
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Gift"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Gift"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Gift"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Gift"
+                    description: ""
+        patch:
+            operationId: gifts_partial_update
+            description: |-
+                CRUD completo de Gifts.
+
+                Leitura (listar e detalhar) é pública.
+                Criar, editar e apagar exigem login.
+
+                Endpoints gerados automaticamente:
+                - GET /api/gifts/ → lista todos
+                - POST /api/gifts/ → cria um novo
+                - GET /api/gifts/{uuid}/ → detalhes de um
+                - PUT /api/gifts/{uuid}/ → atualiza completo
+                - PATCH /api/gifts/{uuid}/ → atualiza parcial
+                - DELETE /api/gifts/{uuid}/ → deleta
+                - POST /api/gifts/{uuid}/purchase/ → convidado escolhe o presente sem login
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this gift.
+                  required: true
+            tags:
+                - gifts
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PatchedGift"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/PatchedGift"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/PatchedGift"
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Gift"
+                    description: ""
+        delete:
+            operationId: gifts_destroy
+            description: |-
+                CRUD completo de Gifts.
+
+                Leitura (listar e detalhar) é pública.
+                Criar, editar e apagar exigem login.
+
+                Endpoints gerados automaticamente:
+                - GET /api/gifts/ → lista todos
+                - POST /api/gifts/ → cria um novo
+                - GET /api/gifts/{uuid}/ → detalhes de um
+                - PUT /api/gifts/{uuid}/ → atualiza completo
+                - PATCH /api/gifts/{uuid}/ → atualiza parcial
+                - DELETE /api/gifts/{uuid}/ → deleta
+                - POST /api/gifts/{uuid}/purchase/ → convidado escolhe o presente sem login
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this gift.
+                  required: true
+            tags:
+                - gifts
+            security:
+                - tokenAuth: []
+            responses:
+                "204":
+                    description: No response body
+    /api/gifts/{uuid}/purchase/:
+        post:
+            operationId: gifts_purchase_create
+            description: |-
+                Registra a escolha de um presente sem login.
+
+                O convidado informa o código do convite, escolhe qual pessoa
+                daquele convite está dando o presente e pode deixar uma mensagem.
+
+                URL: POST /api/gifts/{uuid}/purchase/
+                Body: {"code": "ABC123", "guest": "uuid-do-convidado", "message": "Com carinho"}
+
+                Os nomes para a escolha vêm de GET /api/invites/{code}/guests/.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this gift.
+                  required: true
+            tags:
+                - gifts
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/GiftPurchase"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/GiftPurchase"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/GiftPurchase"
+                required: true
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/GiftPurchaseResponse"
+                    description: ""
+    /api/guests/:
+        get:
+            operationId: guests_list
+            description: |-
+                CRUD de Guests.
+                Apenas usuários autenticados (pais) podem acessar.
+            tags:
+                - guests
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Guest"
+                    description: ""
+        post:
+            operationId: guests_create
+            description: |-
+                CRUD de Guests.
+                Apenas usuários autenticados (pais) podem acessar.
+            tags:
+                - guests
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Guest"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Guest"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Guest"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Guest"
+                    description: ""
+    /api/guests/{uuid}/:
+        get:
+            operationId: guests_retrieve
+            description: |-
+                CRUD de Guests.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this guest.
+                  required: true
+            tags:
+                - guests
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Guest"
+                    description: ""
+        put:
+            operationId: guests_update
+            description: |-
+                CRUD de Guests.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this guest.
+                  required: true
+            tags:
+                - guests
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Guest"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Guest"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Guest"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Guest"
+                    description: ""
+        patch:
+            operationId: guests_partial_update
+            description: |-
+                CRUD de Guests.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this guest.
+                  required: true
+            tags:
+                - guests
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PatchedGuest"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/PatchedGuest"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/PatchedGuest"
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Guest"
+                    description: ""
+        delete:
+            operationId: guests_destroy
+            description: |-
+                CRUD de Guests.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this guest.
+                  required: true
+            tags:
+                - guests
+            security:
+                - tokenAuth: []
+            responses:
+                "204":
+                    description: No response body
+    /api/invites/:
+        get:
+            operationId: invites_list
+            description: |-
+                CRUD de Invites.
+                Apenas usuários autenticados (pais) podem acessar.
+            tags:
+                - invites
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Invite"
+                    description: ""
+        post:
+            operationId: invites_create
+            description: |-
+                CRUD de Invites.
+                Apenas usuários autenticados (pais) podem acessar.
+            tags:
+                - invites
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Invite"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Invite"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Invite"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Invite"
+                    description: ""
+    /api/invites/{code}/confirm_guests/:
+        post:
+            operationId: invites_confirm_guests_create
+            description: |-
+                Confirma a presença de convidados de um invite, sem login.
+
+                URL: POST /api/invites/{code}/confirm_guests/
+                Body: {"guest_uuids": ["uuid-1", "uuid-2"]}
+
+                A resposta devolve os nomes dos convidados daquele convite.
+                Para listar os nomes antes de confirmar, use GET /api/invites/{code}/guests/.
+            parameters:
+                - in: path
+                  name: code
+                  schema:
+                      type: string
+                      pattern: ^[A-Za-z0-9]{6}$
+                  required: true
+            tags:
+                - invites
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ConfirmGuestsRequest"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/ConfirmGuestsRequest"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/ConfirmGuestsRequest"
+                required: true
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ConfirmGuestsResponse"
+                    description: ""
+    /api/invites/{code}/guests/:
+        get:
+            operationId: invites_guests_retrieve
+            description: |-
+                Mostra os nomes dos convidados de um convite, sem login.
+
+                Usado antes de confirmar presença e antes de registrar um presente,
+                para a pessoa escolher quem, daquele convite, está agindo.
+
+                URL: GET /api/invites/{code}/guests/
+            parameters:
+                - in: path
+                  name: code
+                  schema:
+                      type: string
+                      pattern: ^[A-Za-z0-9]{6}$
+                  required: true
+            tags:
+                - invites
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/InviteGuestsResponse"
+                    description: ""
+    /api/invites/{uuid}/:
+        get:
+            operationId: invites_retrieve
+            description: |-
+                CRUD de Invites.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this invite.
+                  required: true
+            tags:
+                - invites
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Invite"
+                    description: ""
+        put:
+            operationId: invites_update
+            description: |-
+                CRUD de Invites.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this invite.
+                  required: true
+            tags:
+                - invites
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Invite"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Invite"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Invite"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Invite"
+                    description: ""
+        patch:
+            operationId: invites_partial_update
+            description: |-
+                CRUD de Invites.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this invite.
+                  required: true
+            tags:
+                - invites
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PatchedInvite"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/PatchedInvite"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/PatchedInvite"
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Invite"
+                    description: ""
+        delete:
+            operationId: invites_destroy
+            description: |-
+                CRUD de Invites.
+                Apenas usuários autenticados (pais) podem acessar.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this invite.
+                  required: true
+            tags:
+                - invites
+            security:
+                - tokenAuth: []
+            responses:
+                "204":
+                    description: No response body
+    /api/schema/:
+        get:
+            operationId: schema_retrieve
+            description: |-
+                OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+                - YAML: application/vnd.oai.openapi
+                - JSON: application/vnd.oai.openapi+json
+            parameters:
+                - in: query
+                  name: format
+                  schema:
+                      type: string
+                      enum:
+                          - json
+                          - yaml
+                - in: query
+                  name: lang
+                  schema:
+                      type: string
+                      enum:
+                          - af
+                          - ar
+                          - ar-dz
+                          - ast
+                          - az
+                          - be
+                          - bg
+                          - bn
+                          - br
+                          - bs
+                          - ca
+                          - ckb
+                          - cs
+                          - cy
+                          - da
+                          - de
+                          - dsb
+                          - el
+                          - en
+                          - en-au
+                          - en-gb
+                          - eo
+                          - es
+                          - es-ar
+                          - es-co
+                          - es-mx
+                          - es-ni
+                          - es-ve
+                          - et
+                          - eu
+                          - fa
+                          - fi
+                          - fr
+                          - fy
+                          - ga
+                          - gd
+                          - gl
+                          - he
+                          - hi
+                          - hr
+                          - hsb
+                          - ht
+                          - hu
+                          - hy
+                          - ia
+                          - id
+                          - ig
+                          - io
+                          - is
+                          - it
+                          - ja
+                          - ka
+                          - kab
+                          - kk
+                          - km
+                          - kn
+                          - ko
+                          - ky
+                          - lb
+                          - lt
+                          - lv
+                          - mk
+                          - ml
+                          - mn
+                          - mr
+                          - ms
+                          - my
+                          - nb
+                          - ne
+                          - nl
+                          - nn
+                          - os
+                          - pa
+                          - pl
+                          - pt
+                          - pt-br
+                          - ro
+                          - ru
+                          - sk
+                          - sl
+                          - sq
+                          - sr
+                          - sr-latn
+                          - sv
+                          - sw
+                          - ta
+                          - te
+                          - tg
+                          - th
+                          - tk
+                          - tr
+                          - tt
+                          - udm
+                          - ug
+                          - uk
+                          - ur
+                          - uz
+                          - vi
+                          - zh-hans
+                          - zh-hant
+            tags:
+                - schema
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/vnd.oai.openapi:
+                            schema:
+                                type: object
+                                additionalProperties: {}
+                        application/yaml:
+                            schema:
+                                type: object
+                                additionalProperties: {}
+                        application/vnd.oai.openapi+json:
+                            schema:
+                                type: object
+                                additionalProperties: {}
+                        application/json:
+                            schema:
+                                type: object
+                                additionalProperties: {}
+                    description: ""
+    /api/tags/:
+        get:
+            operationId: tags_list
+            description: |-
+                CRUD de Tags.
+
+                Listar e detalhar é público. Criar, editar e apagar exigem login.
+            tags:
+                - tags
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Tag"
+                    description: ""
+        post:
+            operationId: tags_create
+            description: |-
+                CRUD de Tags.
+
+                Listar e detalhar é público. Criar, editar e apagar exigem login.
+            tags:
+                - tags
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Tag"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Tag"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Tag"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Tag"
+                    description: ""
+    /api/tags/{uuid}/:
+        get:
+            operationId: tags_retrieve
+            description: |-
+                CRUD de Tags.
+
+                Listar e detalhar é público. Criar, editar e apagar exigem login.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this tag.
+                  required: true
+            tags:
+                - tags
+            security:
+                - tokenAuth: []
+                - {}
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Tag"
+                    description: ""
+        put:
+            operationId: tags_update
+            description: |-
+                CRUD de Tags.
+
+                Listar e detalhar é público. Criar, editar e apagar exigem login.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this tag.
+                  required: true
+            tags:
+                - tags
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Tag"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/Tag"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/Tag"
+                required: true
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Tag"
+                    description: ""
+        patch:
+            operationId: tags_partial_update
+            description: |-
+                CRUD de Tags.
+
+                Listar e detalhar é público. Criar, editar e apagar exigem login.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this tag.
+                  required: true
+            tags:
+                - tags
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PatchedTag"
+                    application/x-www-form-urlencoded:
+                        schema:
+                            $ref: "#/components/schemas/PatchedTag"
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/PatchedTag"
+            security:
+                - tokenAuth: []
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Tag"
+                    description: ""
+        delete:
+            operationId: tags_destroy
+            description: |-
+                CRUD de Tags.
+
+                Listar e detalhar é público. Criar, editar e apagar exigem login.
+            parameters:
+                - in: path
+                  name: uuid
+                  schema:
+                      type: string
+                      format: uuid
+                  description: A UUID string identifying this tag.
+                  required: true
+            tags:
+                - tags
+            security:
+                - tokenAuth: []
+            responses:
+                "204":
+                    description: No response body
+components:
+    schemas:
+        AgeEnum:
+            enum:
+                - adult
+                - kid
+            type: string
+            description: |-
+                * `adult` - Adult
+                * `kid` - Kid
+        CategoryEnum:
+            enum:
+                - family
+                - friend
+                - church
+            type: string
+            description: |-
+                * `family` - Family
+                * `friend` - Friend
+                * `church` - Church
+        File:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                image:
+                    type: string
+                    format: uri
+                    nullable: true
+                image_url:
+                    type: string
+                    nullable: true
+                    readOnly: true
+                alt:
+                    type: string
+                    maxLength: 255
+                gift:
+                    type: string
+                    format: uuid
+            required:
+                - gift
+                - image_url
+                - uuid
+        Gift:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 100
+                description:
+                    type: string
+                link:
+                    type: string
+                    format: uri
+                    maxLength: 200
+                limit:
+                    type: integer
+                    maximum: 9223372036854775807
+                    minimum: 0
+                    format: int64
+                tag_names:
+                    type: array
+                    items:
+                        type: string
+                        maxLength: 100
+                    writeOnly: true
+                    description: Lista de nomes de tags. Serão criadas automaticamente se não
+                        existirem.
+                tags:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Tag"
+                    readOnly: true
+                files:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/File"
+                    readOnly: true
+            required:
+                - files
+                - limit
+                - link
+                - name
+                - tags
+                - uuid
+        GiftPurchase:
+            type: object
+            description: Confirma a compra de um presente a partir do código do convite.
+            properties:
+                code:
+                    type: string
+                    maxLength: 6
+                guest:
+                    type: string
+                    format: uuid
+                message:
+                    type: string
+                    default: ""
+            required:
+                - code
+                - guest
+        GiftPurchaseGuest:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                name:
+                    type: string
+            required:
+                - name
+                - uuid
+        GiftPurchaseResponse:
+            type: object
+            properties:
+                message:
+                    type: string
+                guest:
+                    $ref: "#/components/schemas/GiftPurchaseGuest"
+                gift_message:
+                    type: string
+                selected_at:
+                    type: string
+                    format: date-time
+            required:
+                - gift_message
+                - guest
+                - message
+                - selected_at
+        Guest:
+            type: object
+            description: |-
+                Serializer de Guest.
+
+                Input (criação/atualização):
+                {
+                    "name": "Gabriel",
+                    "age": "adult",
+                    "category": "family",
+                    "phone": "(11) 9 9999-9999",
+                    "invite": "uuid-do-invite",
+                    "gifts": [
+                        {"gift": "uuid-do-gift", "message": "Parabéns!"},
+                        {"gift": "uuid-do-outro-gift"}
+                    ]
+                }
+
+                Output (leitura):
+                {
+                    "uuid": "guest-123...",
+                    "name": "Gabriel",
+                    "age": "adult",
+                    "category": "family",
+                    "phone": "(11) 9 9999-9999",
+                    "confirmed": false,
+                    "invite": "uuid-do-invite",
+                    "gifts": [
+                        {
+                            "gift": {"uuid": "...", "name": "Carrinho", ...},
+                            "message": "Parabéns!",
+                            "selected_at": "2026-11-01T10:30:00Z"
+                        }
+                    ]
+                }
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 255
+                age:
+                    $ref: "#/components/schemas/AgeEnum"
+                phone:
+                    type: string
+                    nullable: true
+                    maxLength: 20
+                confirmed:
+                    type: boolean
+                    readOnly: true
+                category:
+                    $ref: "#/components/schemas/CategoryEnum"
+                invite:
+                    type: string
+                    format: uuid
+                gifts:
+                    type: array
+                    items:
+                        type: object
+                        additionalProperties: {}
+                    writeOnly: true
+                    description: "Lista de gifts escolhidos: [{'gift': uuid, 'message':
+                        string}]"
+            required:
+                - age
+                - category
+                - confirmed
+                - invite
+                - name
+                - uuid
+        ConfirmGuestsRequest:
+            type: object
+            description: Corpo de POST /api/invites/{code}/confirm_guests/.
+            properties:
+                guest_uuids:
+                    type: array
+                    items:
+                        type: string
+                        format: uuid
+            required:
+                - guest_uuids
+        ConfirmGuestsResponse:
+            type: object
+            description: Resposta de POST /api/invites/{code}/confirm_guests/.
+            properties:
+                message:
+                    type: string
+                confirmed_count:
+                    type: integer
+                guests:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/PublicGuest"
+            required:
+                - confirmed_count
+                - guests
+                - message
+        InviteCodeSummary:
+            type: object
+            properties:
+                name:
+                    type: string
+                code:
+                    type: string
+            required:
+                - code
+                - name
+        InviteGuestsResponse:
+            type: object
+            description: Resposta de GET /api/invites/{code}/guests/.
+            properties:
+                invite:
+                    $ref: "#/components/schemas/InviteCodeSummary"
+                guests:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/PublicGuest"
+            required:
+                - guests
+                - invite
+        PublicGuest:
+            type: object
+            description: Nome do convidado exposto a quem informa o código do convite.
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    readOnly: true
+                confirmed:
+                    type: boolean
+                    readOnly: true
+            required:
+                - confirmed
+                - name
+                - uuid
+        Invite:
+            type: object
+            description: |-
+                Serializer de Invite.
+
+                O campo 'code' é gerado automaticamente pelo model, então é read_only.
+                O usuário só precisa enviar o 'name' na criação.
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 255
+                code:
+                    type: string
+                    readOnly: true
+            required:
+                - code
+                - name
+                - uuid
+        Login:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                    writeOnly: true
+            required:
+                - password
+                - username
+        LoginResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+                    readOnly: true
+                user:
+                    allOf:
+                        - $ref: "#/components/schemas/User"
+                    readOnly: true
+            required:
+                - token
+                - user
+        LogoutResponse:
+            type: object
+            properties:
+                message:
+                    type: string
+                    readOnly: true
+            required:
+                - message
+        PatchedFile:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                image:
+                    type: string
+                    format: uri
+                    nullable: true
+                image_url:
+                    type: string
+                    nullable: true
+                    readOnly: true
+                alt:
+                    type: string
+                    maxLength: 255
+                gift:
+                    type: string
+                    format: uuid
+        PatchedGift:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 100
+                description:
+                    type: string
+                link:
+                    type: string
+                    format: uri
+                    maxLength: 200
+                limit:
+                    type: integer
+                    maximum: 9223372036854775807
+                    minimum: 0
+                    format: int64
+                tag_names:
+                    type: array
+                    items:
+                        type: string
+                        maxLength: 100
+                    writeOnly: true
+                    description: Lista de nomes de tags. Serão criadas automaticamente se não
+                        existirem.
+                tags:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Tag"
+                    readOnly: true
+                files:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/File"
+                    readOnly: true
+        PatchedGuest:
+            type: object
+            description: |-
+                Serializer de Guest.
+
+                Input (criação/atualização):
+                {
+                    "name": "Gabriel",
+                    "age": "adult",
+                    "category": "family",
+                    "phone": "(11) 9 9999-9999",
+                    "invite": "uuid-do-invite",
+                    "gifts": [
+                        {"gift": "uuid-do-gift", "message": "Parabéns!"},
+                        {"gift": "uuid-do-outro-gift"}
+                    ]
+                }
+
+                Output (leitura):
+                {
+                    "uuid": "guest-123...",
+                    "name": "Gabriel",
+                    "age": "adult",
+                    "category": "family",
+                    "phone": "(11) 9 9999-9999",
+                    "confirmed": false,
+                    "invite": "uuid-do-invite",
+                    "gifts": [
+                        {
+                            "gift": {"uuid": "...", "name": "Carrinho", ...},
+                            "message": "Parabéns!",
+                            "selected_at": "2026-11-01T10:30:00Z"
+                        }
+                    ]
+                }
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 255
+                age:
+                    $ref: "#/components/schemas/AgeEnum"
+                phone:
+                    type: string
+                    nullable: true
+                    maxLength: 20
+                confirmed:
+                    type: boolean
+                    readOnly: true
+                category:
+                    $ref: "#/components/schemas/CategoryEnum"
+                invite:
+                    type: string
+                    format: uuid
+                gifts:
+                    type: array
+                    items:
+                        type: object
+                        additionalProperties: {}
+                    writeOnly: true
+                    description: "Lista de gifts escolhidos: [{'gift': uuid, 'message':
+                        string}]"
+        PatchedInvite:
+            type: object
+            description: |-
+                Serializer de Invite.
+
+                O campo 'code' é gerado automaticamente pelo model, então é read_only.
+                O usuário só precisa enviar o 'name' na criação.
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 255
+                code:
+                    type: string
+                    readOnly: true
+        PatchedTag:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 100
+                description:
+                    type: string
+        Tag:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                name:
+                    type: string
+                    maxLength: 100
+                description:
+                    type: string
+            required:
+                - name
+                - uuid
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    readOnly: true
+                username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+                        only.
+                    pattern: ^[\w.@+-]+$
+                    maxLength: 150
+                first_name:
+                    type: string
+                    maxLength: 150
+            required:
+                - id
+                - username
+    securitySchemes:
+        tokenAuth:
+            type: apiKey
+            in: header
+            name: Authorization
+            description: Token-based authentication with required prefix "Token"

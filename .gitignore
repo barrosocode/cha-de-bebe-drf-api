@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+
+# Ambiente virtual
+venv/
+.venv/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Segredos
+.env
+.env.*
+!.env.example
+
+# Editor
+.cursor/
+.idea/
+.vscode/
+
+# Sistema
+.DS_Store
