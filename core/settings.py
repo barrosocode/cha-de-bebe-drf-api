@@ -13,12 +13,36 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 # configurações de upload de arquivos
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'storages.backends.s3.S3Storage',
+        'OPTIONS': {
+            'access_key': os.environ['SUPABASE_S3_ACCESS_KEY_ID'],
+            'secret_key': os.environ['SUPABASE_S3_SECRET_ACCESS_KEY'],
+            'bucket_name': os.environ.get('SUPABASE_S3_BUCKET_NAME', 'images'),
+            'region_name': os.environ['SUPABASE_S3_REGION_NAME'],
+            'endpoint_url': os.environ['SUPABASE_S3_ENDPOINT_URL'],
+            'custom_domain': os.environ['SUPABASE_S3_CUSTOM_DOMAIN'],
+            'addressing_style': 'path',
+            'signature_version': 's3v4',
+            'querystring_auth': False,
+            'default_acl': None,
+        },
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
